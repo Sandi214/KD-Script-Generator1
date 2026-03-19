@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <title>KD Script Generator PREMIUM</title>
+    <style>
+        body {
+            background: #0a0a0a;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .license-box {
+            background: #1a1a1a;
+            border: 2px solid #e02020;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 500px;
+            margin: 50px auto;
+            text-align: center;
+        }
+
+        .license-box input {
+            width: 100%;
+            padding: 15px;
+            margin: 20px 0;
+            background: #2a2a2a;
+            border: 1px solid #444;
+            color: #fff;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .btn {
+            background: #e02020;
+            color: #fff;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .success {
+            background: #1a2a1a;
+            border: 2px solid #2ecc71;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .error {
+            background: #2a1a1a;
+            border: 2px solid #e02020;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            color: #ffaaaa;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- BOX LICENSE INPUT -->
+        <div id="licenseBox" class="license-box">
+            <h2 style="color:#e02020;">🔑 ACTIVATE LICENSE</h2>
+            <p style="color:#aaa;">Masukkan license key kamu untuk mengakses premium</p>
+            <input type="text" id="licenseInput" placeholder="Contoh: KD-ABCD-EFGH-IJKL">
+            <button class="btn" onclick="activateLicense()">AKTIFKAN LICENSE</button>
+            <p style="margin-top:20px; color:#555;">Belum punya license? <a href="https://wa.me/6281234567890"
+                    style="color:#e02020;">Beli di sini</a></p>
+        </div>
+
+        <!-- KONTEN PREMIUM (MUNCUL KALO LICENSE VALID) -->
+        <div id="premiumContent" class="hidden">
+            <div
+                style="background:#1a2a1a; border:2px solid #2ecc71; border-radius:10px; padding:15px; margin:20px 0; display:flex; justify-content:space-between;">
+                <span>✅ PREMIUM ACTIVE</span>
+                <span id="licenseDisplay"></span>
+            </div>
+
+            <h1>✨ KD SCRIPT GENERATOR - PREMIUM</h1>
+            <p>Selamat datang! License valid. Kamu bisa generate unlimited.</p>
+
+            <!-- FORM GENERATOR SEDERHANA -->
+            <div style="background:#1a1a1a; border-radius:10px; padding:20px; margin:20px 0;">
+                <h3>Generate Script Baru</h3>
+                <input type="text" id="judul" placeholder="Masukkan judul video..."
+                    style="width:100%; padding:12px; background:#2a2a2a; border:1px solid #444; color:#fff; border-radius:8px; margin:10px 0;">
+                <button onclick="generateDemo()"
+                    style="background:#e02020; color:#fff; border:none; padding:12px 25px; border-radius:8px; cursor:pointer;">Generate</button>
+                <div id="result" style="margin-top:20px; color:#aaa;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ========== DATABASE LICENSE VALID ==========
+        // TAMBAHKAN LICENSE KAMU DI SINI
+        const VALID_LICENSES = [
+            'KD-ABCD-EFGH-IJKL',  // GANTI DENGAN LICENSE DARI ADMIN
+            'KD-TEST-1234-5678',  // License test
+            'KD-DEMO-9999-8888',  // Demo license
+        ];
+
+        // CEK APAKAH SUDAH ADA LICENSE DI LOCALSTORAGE
+        window.addEventListener('load', function () {
+            const savedLicense = localStorage.getItem('kd_license');
+            if (savedLicense && VALID_LICENSES.includes(savedLicense)) {
+                showPremiumContent(savedLicense);
+            }
+        });
+
+        // FUNGSI AKTIVASI LICENSE
+        function activateLicense() {
+            const inputKey = document.getElementById('licenseInput').value.trim().toUpperCase();
+
+            if (!inputKey) {
+                alert('Masukkan license key!');
+                return;
+            }
+
+            if (!inputKey.startsWith('KD-')) {
+                alert('Format salah! License harus diawali KD-');
+                return;
+            }
+
+            if (VALID_LICENSES.includes(inputKey)) {
+                // License valid
+                localStorage.setItem('kd_license', inputKey);
+                showPremiumContent(inputKey);
+            } else {
+                alert('LICENSE TIDAK VALID! Key: ' + inputKey + ' tidak terdaftar');
+            }
+        }
+
+        // TAMPILKAN KONTEN PREMIUM
+        function showPremiumContent(key) {
+            document.getElementById('licenseBox').classList.add('hidden');
+            document.getElementById('premiumContent').classList.remove('hidden');
+            document.getElementById('licenseDisplay').innerHTML = `🔑 ${maskLicense(key)}`;
+        }
+
+        // MASK LICENSE
+        function maskLicense(key) {
+            if (key.length > 10) {
+                return key.substring(0, 7) + '...' + key.substring(key.length - 4);
+            }
+            return key;
+        }
+
+        // FUNGSI GENERATE DEMO
+        function generateDemo() {
+            const judul = document.getElementById('judul').value;
+            if (!judul) {
+                alert('Masukkan judul dulu!');
+                return;
+            }
+            document.getElementById('result').innerHTML = `✅ Script untuk "${judul}" berhasil digenerate! (Ini demo, nanti dihubungkan ke AI)`;
+        }
+    </script>
+</body>
+
+</html>
