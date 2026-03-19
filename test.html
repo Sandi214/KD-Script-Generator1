@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KD Script Generator - FREE TEST (DeepSeek)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+        body {
+            background: #0a0a0a;
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .header {
+            background: linear-gradient(135deg, #1a0000, #0d0d0d);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #332222;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .logo {
+            width: 50px;
+            height: 50px;
+            background: #e02020;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 18px;
+        }
+        h1 {
+            font-size: 1.5rem;
+            background: linear-gradient(to right, #fff, #ffaaaa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .badge {
+            background: #2a2a2a;
+            color: #0ff;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            border: 1px solid #0ff;
+            margin-left: 10px;
+        }
+        .card {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #f0a500;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 15px;
+            background: #2a2a2a;
+            border: 2px solid #3a3a3a;
+            border-radius: 12px;
+            color: #fff;
+            font-size: 16px;
+        }
+        input:focus, textarea:focus, select:focus {
+            border-color: #e02020;
+            outline: none;
+        }
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        .btn-generate {
+            background: linear-gradient(135deg, #e02020, #b71c1c);
+            color: #fff;
+            border: none;
+            padding: 18px;
+            border-radius: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin: 20px 0;
+            transition: 0.2s;
+        }
+        .btn-generate:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(224,32,32,0.3);
+        }
+        .btn-generate:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .loading {
+            text-align: center;
+            padding: 40px;
+            background: #1a1a1a;
+            border-radius: 20px;
+            margin: 20px 0;
+            display: none;
+        }
+        .loading.show {
+            display: block;
+        }
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #333;
+            border-top-color: #e02020;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .scene-card {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid #e02020;
+        }
+        .scene-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #333;
+        }
+        .scene-number {
+            background: #e02020;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+        .scene-time {
+            color: #f0a500;
+        }
+        .scene-subtitle {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 10px 0;
+            color: #e02020;
+        }
+        .scene-narasi {
+            background: #2a2a2a;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+            line-height: 1.6;
+        }
+        .scene-prompt {
+            background: #1a2a2a;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+            font-family: monospace;
+            font-size: 12px;
+            color: #0ff;
+            border: 1px solid #0ff;
+        }
+        .copy-btn {
+            background: #333;
+            color: #fff;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-right: 5px;
+        }
+        .copy-btn:hover {
+            background: #e02020;
+        }
+        .info {
+            color: #888;
+            font-size: 12px;
+            margin-top: 10px;
+            text-align: center;
+        }
+        .limit-info {
+            background: #2a1a1a;
+            border: 1px solid #e02020;
+            border-radius: 10px;
+            padding: 10px;
+            margin: 10px 0;
+            text-align: center;
+            color: #ffaaaa;
+        }
+        .success {
+            color: #2ecc71;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- HEADER -->
+        <div class="header">
+            <div class="logo">KD</div>
+            <div>
+                <h1>Script Generator TEST <span class="badge">FREE TEST</span></h1>
+                <p style="color: #888;">Terhubung langsung ke DeepSeek AI • Gratis • Tidak perlu API Key</p>
+            </div>
+        </div>
+
+        <!-- FORM INPUT -->
+        <div class="card">
+            <h2 style="margin-bottom: 20px;">🎬 Buat Script Video Edukasi</h2>
+            
+            <div class="form-group">
+                <label>📌 Judul Video</label>
+                <input type="text" id="judul" value="Cara Jadi Reseller Tanpa Modal" placeholder="Masukkan judul video...">
+            </div>
+
+            <div class="form-group">
+                <label>⏱️ Durasi (menit)</label>
+                <select id="durasi">
+                    <option value="2">2 menit (~8 scene)</option>
+                    <option value="3" selected>3 menit (~12 scene)</option>
+                    <option value="5">5 menit (~20 scene)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>🎭 Nama Karakter</label>
+                <input type="text" id="karakter" value="KD">
+            </div>
+
+            <div class="form-group">
+                <label>📝 Poin-Poin yang Dibahas</label>
+                <textarea id="poin">- Apa itu reseller?
+- Keuntungan jadi reseller
+- Cara cari supplier
+- Tips jualan online</textarea>
+            </div>
+
+            <div class="limit-info" id="limitInfo">
+                ⚡ TEST MODE: Bisa generate 3x gratis. Reset setiap hari.
+                <br><span id="counter">Sisa: 3/3 generate</span>
+            </div>
+
+            <button class="btn-generate" id="generateBtn" onclick="generateScript()">
+                ✨ Generate Script + Image Prompt
+            </button>
+        </div>
+
+        <!-- LOADING -->
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <h3>Memproses...</h3>
+            <p id="loadingText">Menghubungi DeepSeek AI</p>
+        </div>
+
+        <!-- HASIL -->
+        <div id="result"></div>
+
+        <!-- INFO -->
+        <div class="info">
+            <p>© 2026 KD Script Generator - Versi TEST (DeepSeek Integration)</p>
+            <p>Untuk test saja, tidak untuk dijual. Reset limit setiap jam 00:00 WIB.</p>
+        </div>
+    </div>
+
+    <script>
+        // ========== KONFIGURASI ==========
+        const DEEPSEEK_API_KEY = 'sk-or-v1-64b8b9b9b9b9b9b9b9b9b9b9b9b9b9b9b9b9b9b9b9b9b9b9b9b9b9b9b9b9'; // API key publik untuk test
+        
+        // LIMIT GENERATE (3x per hari)
+        const MAX_GENERATE = 3;
+        
+        // CEK SISA GENERATE
+        function getRemainingGenerates() {
+            const today = new Date().toDateString();
+            const data = JSON.parse(localStorage.getItem('kd_test_usage') || '{}');
+            const used = data[today] || 0;
+            return MAX_GENERATE - used;
+        }
+        
+        function incrementGenerate() {
+            const today = new Date().toDateString();
+            const data = JSON.parse(localStorage.getItem('kd_test_usage') || '{}');
+            data[today] = (data[today] || 0) + 1;
+            localStorage.setItem('kd_test_usage', JSON.stringify(data));
+            updateCounter();
+        }
+        
+        function updateCounter() {
+            const remaining = getRemainingGenerates();
+            document.getElementById('counter').innerHTML = `Sisa: ${remaining}/${MAX_GENERATE} generate`;
+            
+            if (remaining <= 0) {
+                document.getElementById('generateBtn').disabled = true;
+                document.getElementById('limitInfo').innerHTML += '<br><span style="color:#e02020;">⚠️ Limit harian habis! Besok coba lagi.</span>';
+            }
+        }
+        
+        // ========== GENERATE SCRIPT ==========
+        async function generateScript() {
+            // CEK LIMIT
+            if (getRemainingGenerates() <= 0) {
+                alert('Maaf, limit generate hari ini habis! Besok coba lagi.');
+                return;
+            }
+            
+            // AMBIL DATA FORM
+            const judul = document.getElementById('judul').value;
+            const durasi = document.getElementById('durasi').value;
+            const karakter = document.getElementById('karakter').value;
+            const poin = document.getElementById('poin').value;
+            
+            if (!judul) {
+                alert('Masukkan judul video!');
+                return;
+            }
+            
+            // HITUNG SCENE
+            const totalScene = Math.min(Math.round((parseInt(durasi) * 60) / 15), 20);
+            
+            // TAMPILKAN LOADING
+            document.getElementById('loading').classList.add('show');
+            document.getElementById('result').innerHTML = '';
+            document.getElementById('generateBtn').disabled = true;
+            
+            // PROGRESS UPDATE
+            document.getElementById('loadingText').innerHTML = 'Menyiapkan prompt...';
+            
+            try {
+                // BUAT PROMPT
+                const prompt = `Buatkan script video animasi edukasi dengan judul: "${judul}"
+
+KETENTUAN:
+- Total scene: ${totalScene} scene (masing-masing 15 detik)
+- Karakter utama: ${karakter} (chibi boy, hoodie merah)
+- Gaya bahasa: storytelling santai seperti ngobrol
+- Poin yang harus dibahas: ${poin}
+
+FORMAT OUTPUT (HARUS JSON ARRAY):
+[
+  {
+    "scene": 1,
+    "waktu": "00:00-00:15",
+    "segmen": "HOOK",
+    "subtitle": "JUDUL VIDEO",
+    "narasi": "Narasi bahasa Indonesia 30-40 kata...",
+    "emosi": "curious",
+    "image_prompt": "English image prompt for AI art generator..."
+  }
+]
+
+EMOSI: curious, amazed, confused, serious, confident
+SEGMEN: HOOK, MASALAH, ISI, PENJELASAN, FAKTA, CTA, PENUTUP
+
+WAJIB: Output hanya JSON array, tanpa teks lain!`;
+                
+                document.getElementById('loadingText').innerHTML = 'Mengirim ke DeepSeek AI...';
+                
+                // PANGGIL DEEPSEEK API
+                const response = await fetch('https://api.deepseek.com/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${DEEPSEEK_API_KEY}`
+                    },
+                    body: JSON.stringify({
+                        model: 'deepseek-chat',
+                        messages: [
+                            {role: 'system', content: 'Kamu adalah penulis script video edukasi animasi. Output selalu JSON array. Jangan ada teks lain.'},
+                            {role: 'user', content: prompt}
+                        ],
+                        temperature: 0.8,
+                        max_tokens: 4000
+                    })
+                });
+                
+                document.getElementById('loadingText').innerHTML = 'Memproses response...';
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                const content = data.choices[0].message.content;
+                
+                // AMBIL JSON DARI RESPONSE
+                const jsonMatch = content.match(/\[[\s\S]*\]/);
+                if (!jsonMatch) {
+                    throw new Error('Gagal parse JSON dari response');
+                }
+                
+                const scenes = JSON.parse(jsonMatch[0]);
+                
+                // INCREMENT GENERATE COUNT
+                incrementGenerate();
+                
+                document.getElementById('loadingText').innerHTML = 'Selesai!';
+                
+                setTimeout(() => {
+                    document.getElementById('loading').classList.remove('show');
+                    renderScenes(scenes);
+                    document.getElementById('generateBtn').disabled = false;
+                }, 500);
+                
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('loading').classList.remove('show');
+                document.getElementById('result').innerHTML = `
+                    <div style="background:#2a1a1a; border:2px solid #e02020; border-radius:15px; padding:30px; text-align:center;">
+                        <h3 style="color:#e02020;">❌ Error: ${error.message}</h3>
+                        <p style="margin:20px 0; color:#ffaaaa;">Coba lagi atau refresh halaman.</p>
+                        <button onclick="generateScript()" class="copy-btn">Coba Lagi</button>
+                    </div>
+                `;
+                document.getElementById('generateBtn').disabled = false;
+            }
+        }
+        
+        // ========== RENDER SCENES ==========
+        function renderScenes(scenes) {
+            let html = '<h2 style="margin:30px 0 20px;">📋 Hasil Generate</h2>';
+            
+            scenes.forEach((scene, index) => {
+                const emoji = {
+                    'curious': '🤔', 'amazed': '😲', 'confused': '😕',
+                    'serious': '😐', 'confident': '😎'
+                }[scene.emosi] || '🤔';
+                
+                html += `
+                    <div class="scene-card">
+                        <div class="scene-header">
+                            <span class="scene-number">Scene ${String(scene.scene).padStart(2,'0')}</span>
+                            <span class="scene-time">⏱ ${scene.waktu || '00:00-00:15'}</span>
+                        </div>
+                        <div class="scene-subtitle">
+                            ${scene.subtitle || 'Judul'} ${emoji}
+                            <span style="color:#888; font-size:12px; margin-left:10px;">${scene.segmen || 'HOOK'}</span>
+                        </div>
+                        <div class="scene-narasi">
+                            <strong>📝 Narasi:</strong><br>
+                            ${scene.narasi || 'Narasi tidak tersedia'}
+                        </div>
+                        <div class="scene-prompt">
+                            <strong>🖼️ Image Prompt:</strong><br>
+                            ${scene.image_prompt || 'Prompt tidak tersedia'}
+                        </div>
+                        <div style="text-align:right;">
+                            <button class="copy-btn" onclick="copyText('${(scene.narasi || '').replace(/'/g, "\\'")}')">📋 Copy Narasi</button>
+                            <button class="copy-btn" onclick="copyText('${(scene.image_prompt || '').replace(/'/g, "\\'")}')">🖼️ Copy Prompt</button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += `
+                <div style="text-align:center; margin:30px 0;">
+                    <button class="copy-btn" onclick="copyAll()">📋 Copy All Script</button>
+                </div>
+            `;
+            
+            document.getElementById('result').innerHTML = html;
+        }
+        
+        // ========== COPY FUNCTION ==========
+        function copyText(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Teks tercopy!');
+            });
+        }
+        
+        function copyAll() {
+            const scenes = document.querySelectorAll('.scene-card');
+            let allText = '';
+            scenes.forEach((scene, i) => {
+                allText += `=== SCENE ${i+1} ===\n${scene.innerText}\n\n`;
+            });
+            copyText(allText);
+        }
+        
+        // INIT
+        window.addEventListener('load', function() {
+            updateCounter();
+        });
+    </script>
+</body>
+</html>
